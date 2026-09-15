@@ -8,7 +8,7 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Tạm dừng xử lý để hỏi thông tin bắt buộc còn thiếu hoặc làm rõ một lựa chọn mơ hồ. Dùng response_type=text cho ID còn thiếu, choice cho tập lựa chọn hữu hạn, và yes_no cho câu hỏi xác nhận."
     parameters:
       type: object
       properties:
@@ -18,7 +18,7 @@ tools:
       required: [question]
 
   - name: search_kb
-    description: "Tìm hướng dẫn hỗ trợ kỹ thuật."
+    description: "Tìm hướng dẫn khắc phục trong kho tri thức nội bộ. Dùng khi người dùng hỏi cách làm/hướng dẫn; không dùng thay cho trạng thái dịch vụ hoặc chẩn đoán một asset cụ thể. Chọn category khớp chủ đề."
     parameters:
       type: object
       properties:
@@ -28,7 +28,7 @@ tools:
       required: [query]
 
   - name: check_service_status
-    description: "Kiểm tra trạng thái một dịch vụ."
+    description: "Kiểm tra trạng thái dịch vụ dùng chung trong production hoặc staging. Gọi một lần cho mỗi cặp service/environment được yêu cầu. Nếu môi trường không ánh xạ rõ vào hai giá trị hợp lệ, phải dùng clarify thay vì tự suy đoán."
     parameters:
       type: object
       properties:
@@ -37,7 +37,7 @@ tools:
       required: [service]
 
   - name: inspect_device
-    description: "Kiểm tra thông tin và chẩn đoán thiết bị."
+    description: "Kiểm tra snapshot của đúng một thiết bị nội bộ. Chỉ gọi khi có asset_id hợp lệ như LT-204; không dùng loại máy, phòng ban, vị trí hay employee_id làm asset_id. Chọn check hẹp nhất: vpn, network, security, hardware hoặc software; chỉ dùng all khi yêu cầu kiểm tra tổng thể."
     parameters:
       type: object
       properties:
@@ -46,7 +46,7 @@ tools:
       required: [asset_id]
 
   - name: lookup_user
-    description: "Tra cứu người dùng trong danh bạ hỗ trợ."
+    description: "Tra cứu một người dùng bằng employee_id hợp lệ như EMP-1003. Kết quả đã chứa danh sách asset được cấp, nên không gọi inspect_device nếu người dùng chỉ hỏi thiết bị được cấp. Nếu thiếu employee_id, dùng clarify."
     parameters:
       type: object
       properties:
