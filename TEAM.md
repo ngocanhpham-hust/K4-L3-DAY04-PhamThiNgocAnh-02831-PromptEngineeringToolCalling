@@ -4,9 +4,9 @@
 
 ## Thông tin bài nộp
 
-- Tên nhóm:
-- Người đại diện / MSSV:
-- Tên repo: `K4-L3-DAY04-HoVaTen-MSSV-PromptEngineeringToolCalling`
+- Tên nhóm: Phạm Thị Ngọc Anh
+- Người đại diện / MSSV: 2A202602831
+- Tên repo: `K4-L3-DAY04-PhamThiNgocAnh-02831-PromptEngineeringToolCalling`
 - URL repo, nhánh nộp, commit chốt:
 - Deadline áp dụng và link thông báo đổi hạn nếu có:
 
