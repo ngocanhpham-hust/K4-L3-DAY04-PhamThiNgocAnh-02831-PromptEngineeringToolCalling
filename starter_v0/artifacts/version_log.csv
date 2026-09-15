@@ -1,3 +1,4 @@
 version,author,changed_artifact,artifact_version,prompt_hash,tools_hash,reason,hypothesis,metric_name,metric_before,metric_after,run_file
 v0,PhamThiNgocAnh,baseline,v0+p27467914bc4d+td4848549884e,27467914bc4d,d4848549884e,baseline,Đo hành vi starter trước khi tối ưu,case_accuracy,,0.70,runs/v0_B_base_openrouter_20260915T191929375954.json
 v1,PhamThiNgocAnh,system_prompt.md+tools.yaml,v1+p7cf01169ee5d+te495079b3c3c,7cf01169ee5d,e495079b3c3c,Làm rõ ID môi trường check hẹp và multi-tool,Nếu cấm tự đoán ID và mô tả rõ routing thì missing_info và wrong_tool sẽ giảm,case_accuracy,0.70,0.90,runs/v1_B_base_openrouter_20260915T230155042878.json
+v2,PhamThiNgocAnh,system_prompt.md,v2+pd17d6a61ddb5+te495079b3c3c,d17d6a61ddb5,e495079b3c3c,Siết vòng đời xác nhận create_ticket,Nếu phân biệt yêu cầu tạo với xác nhận và vô hiệu xác nhận cũ sau khi sửa payload thì không còn ghi ticket sớm,case_accuracy,0.90,0.9667,runs/v2_B_base_openrouter_20260916T010103428352.json
