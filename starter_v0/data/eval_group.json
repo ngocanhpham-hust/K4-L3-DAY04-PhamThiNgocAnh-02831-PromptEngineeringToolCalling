@@ -1,7 +1,118 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
+  "description": "Mười tình huống Helpdesk do cá nhân Phạm Thị Ngọc Anh tự viết: 5 single-turn và 5 multi-turn, dùng để kiểm tra routing, correction, cancellation và confirmation.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_sso_staging_status",
+      "phase": "B",
+      "suite": "group",
+      "query": "Kiểm tra giúp mình dịch vụ SSO trên staging có đang ổn không.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "check_service_status", "args": {"service": "sso", "environment": "staging"}}]},
+      "metadata": {"what_it_tests": "Single-turn: route đúng service và giữ nguyên môi trường staging."}
+    },
+    {
+      "id": "G02_bitlocker_security_check",
+      "phase": "B",
+      "suite": "group",
+      "query": "Máy DT-087 báo lỗi BitLocker; chỉ kiểm tra nhóm security trên máy này.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "inspect_device", "args": {"asset_id": "DT-087", "check": "security"}}]},
+      "metadata": {"what_it_tests": "Single-turn: ánh xạ mã hóa thiết bị sang security thay vì hardware."}
+    },
+    {
+      "id": "G03_print_spooler_kb",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm trong kho nội bộ hướng dẫn khắc phục print spooler trên Windows.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "search_kb", "args": {"category": "printing"}}]},
+      "metadata": {"what_it_tests": "Single-turn: yêu cầu how-to phải dùng KB với category printing."}
+    },
+    {
+      "id": "G04_transcript_privacy_policy",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tra chính sách nội bộ về loại dữ liệu nào không được lưu trong transcript hỗ trợ.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "policy", "args": {"policy_area": "data_privacy"}}]},
+      "metadata": {"what_it_tests": "Single-turn: câu hỏi quy định dữ liệu dùng policy data_privacy."}
+    },
+    {
+      "id": "G05_unconfirmed_outlook_ticket",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tạo ticket mức medium cho lỗi Outlook bị treo trên DT-031.",
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "Single-turn: yêu cầu write action mới chỉ bắt đầu bước xác nhận."}
+    },
+    {
+      "id": "G06_change_environment",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra trạng thái Wi-Fi production."},
+        {"role": "user", "content": "Đổi lại, mình cần môi trường staging."},
+        {"role": "user", "content": "Chỉ kiểm tra Wi-Fi staging thôi."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "check_service_status", "args": {"service": "wifi", "environment": "staging"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: môi trường mới nhất thay thế giá trị cũ."}
+    },
+    {
+      "id": "G07_cancel_ticket",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Chuẩn bị ticket lỗi máy in PR-012 mức low."},
+        {"role": "user", "content": "Thôi, hủy yêu cầu đó."},
+        {"role": "user", "content": "Chỉ xác nhận là bạn sẽ không tạo ticket."}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"what_it_tests": "Multi-turn: cancellation mới nhất phải dừng mọi hành động."}
+    },
+    {
+      "id": "G08_correct_device_and_check",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra hardware của LT-204."},
+        {"role": "user", "content": "Mình đọc nhầm tem, mã đúng là DT-031."},
+        {"role": "user", "content": "Giữ nguyên check hardware trên mã mới."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "inspect_device", "args": {"asset_id": "DT-031", "check": "hardware"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: asset ID được sửa phải thắng ID ở lượt đầu."}
+    },
+    {
+      "id": "G09_switch_user_to_account_kb",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra thông tin nhân viên EMP-1001."},
+        {"role": "user", "content": "Không cần tra người dùng nữa."},
+        {"role": "user", "content": "Chỉ tìm hướng dẫn nội bộ về khôi phục tài khoản bị khóa."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "search_kb", "args": {"category": "account"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: intent mới chuyển lookup_user thành search_kb."}
+    },
+    {
+      "id": "G10_confirm_revised_ticket",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Soạn ticket lỗi VPN AUTH_TIMEOUT trên LT-318 mức medium."},
+        {"role": "user", "content": "Đổi priority của ticket đó thành high."},
+        {"role": "user", "content": "Payload mới chính xác; tôi xác nhận tạo ticket mức high đó."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "create_ticket", "args": {"asset_id": "LT-318", "priority": "high", "confirmed": true}}]},
+      "metadata": {"what_it_tests": "Multi-turn: write action chỉ chạy sau xác nhận payload đã sửa."}
+    }
+  ]
 }

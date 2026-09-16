@@ -10,6 +10,7 @@ from typing import Any
 from env_loader import load_lab_env
 from providers import make_provider
 from providers.base import ToolCall
+from tool_guard import guard_tool_calls
 from tools import TOOL_FUNCTIONS, load_tool_declarations, to_openai_tools
 from versioning import artifact_version_dict, build_artifact_version
 
@@ -91,10 +92,12 @@ def run_model_tool_loop(
 
     for round_index in range(1, max_tool_rounds + 1):
         response = provider.complete(working_messages, tools, model=model, temperature=0.0)
-        calls = response.tool_calls
+        guard = guard_tool_calls(working_messages, response.tool_calls)
+        calls = guard.calls
+        response_text = guard.override_text if guard.override_text is not None else response.text
         round_record: dict[str, Any] = {
             "round": round_index,
-            "assistant_text": response.text,
+            "assistant_text": response_text,
             "tool_calls": [{"name": call.name, "args": call.args} for call in calls],
             "tool_results": [],
         }
@@ -103,17 +106,18 @@ def run_model_tool_loop(
             rounds.append(round_record)
             return {
                 "status": "answered",
-                "assistant_text": response.text or "",
+                "assistant_text": response_text or "",
                 "rounds": rounds,
                 "tool_events": all_tool_events,
             }
 
-        working_messages.append(assistant_tool_message(response.text, calls))
+        working_messages.append(assistant_tool_message(response_text, calls))
         non_clarification_events: list[dict[str, Any]] = []
 
         for call in calls:
             print(f"[tool] {call.name}({json.dumps(call.args, ensure_ascii=True, sort_keys=True)})")
             event = execute_tool_call(call)
+            print(f"[tool-result] {json.dumps(event['result'], ensure_ascii=False, sort_keys=True, default=str)}")
             round_record["tool_results"].append(event)
             all_tool_events.append(event)
 
