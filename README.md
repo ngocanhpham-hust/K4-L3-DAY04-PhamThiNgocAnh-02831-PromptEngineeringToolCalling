@@ -1,5 +1,33 @@
 # Day04 — Prompt Engineering & Tool Calling
 
+## Bài nộp cá nhân — Phạm Thị Ngọc Anh (2A202602831)
+
+Project giữ lĩnh vực IT Helpdesk và đã hoàn thiện bốn phiên bản v0–v3. Kết quả chốt với OpenRouter / `openai/gpt-4o-mini`: base `30/30`, adversarial `12/12`, bộ cá nhân `10/10`; mọi run chốt có `provider_error_cases = 0`.
+
+- Báo cáo và đường dẫn evidence: [starter_v0/artifacts/REPORT.md](starter_v0/artifacts/REPORT.md)
+- Prompt/tool cuối: [system_prompt.md](starter_v0/artifacts/system_prompt.md), [tools.yaml](starter_v0/artifacts/tools.yaml)
+- Lịch sử metric/hash: [version_log.csv](starter_v0/artifacts/version_log.csv)
+- Thông tin cá nhân: [TEAM.md](TEAM.md)
+
+### Khởi động chat UI
+
+```powershell
+cd starter_v0
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# Điền OPENROUTER_API_KEY trong .env
+python scripts/preflight_provider.py --provider openrouter
+python chat.py --provider openrouter --version v3
+```
+
+Trên macOS/Linux, kích hoạt bằng `source .venv/bin/activate`. UI in artifact version, tool + args, tool result/error và tự lưu transcript vào `starter_v0/transcripts/`. Chạy kiểm thử guard offline:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
 **Làm nhóm · K4 Level 3B · Trợ lý AI theo lĩnh vực tự chọn.** Mỗi thành viên tự nộp cùng URL repo nhóm trên VLearn. Repo bài nộp dùng tên `K4-L3-DAY04-HoVaTen-MSSV-PromptEngineeringToolCalling`; khai báo thành viên và đóng góp trong [TEAM.md](TEAM.md).
 
 ## Bài lab này làm gì?
